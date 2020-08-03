@@ -1,0 +1,75 @@
+#!/usr/bin/env node
+let cli = require("../lib/cli")
+let argv = require('yargs')
+    .usage('\n Usage: hd_address_cli [options]')
+    .example('hd_address_cli -c "BTC" -m "tag volcano eight thank tide" -l pri')
+    .epilog('copyright 2022')
+    .alias({
+        c: 'coin',
+        i: 'index',
+        l: 'columns',
+        r: 'range',
+        m: 'mnemonic',
+        s: 'seed',
+        p: 'path',
+        h: "help"
+    }).default({
+        c: "BTC",
+        r: "1-100"
+    }).describe({
+        c: "coin name (e.g. BTC,BCH,LTC,ETH,TRX,BTC_TEST,BCH_TEST,LTC_TEST)",
+        i: "Account Index (e.g. 6)",
+        l: "Columns to display (e.g. pub,pri,path)",
+        r: "Account Index Range (e.g 1-100)",
+        m: "Mnemonic",
+        s: "Seed in hex format",
+        p: "HD Path",
+    }).string(["c", 'l', "r", "m", "s", "p"])
+    .number(["i"])
+    .demand(['c'])
+    .help('h')
+    .command("mnemonic", "Generate random mnemonic", function (yargs) {
+        let argv = yargs.reset()
+            .option("l", {
+                alias: "lang",
+                default: "EN",
+                description: "mnemonic lang"
+            })
+            .option("s", {
+                alias: "strength",
+                default: "low",
+                description: "mnemonic strength"
+            }).help("h")
+            .alias("h", "help")
+            .argv;
+    })
+    .argv;
+
+
+if (process.stdin) {
+    process.stdin.setEncoding('utf8')
+    process.stdin.resume()
+    let content = ''
+    process.stdin.on('data', (buf) => {
+        content += buf.toString()
+    })
+    setTimeout(() => {
+        argv.mnemonic = (content || argv.mnemonic || '').trim()
+
+        if (argv.lang) {
+            cli.generateMnemonic(argv)
+        } else {
+            cli.generateAddress(argv)
+        }
+
+        process.exit(0)
+    }, 10)
+} else {
+    if (argv.lang) {
+        cli.generateMnemonic(argv)
+    } else {
+        cli.generateAddress(argv)
+    }
+}
+
+// 03d0be996b63e90c7625dd3f5319c3bc11669d3d35ae5dc345595e5e59be74084f
