@@ -1,5 +1,5 @@
 # hd-address-cli
->CLI and Node.js library for  HD Wallet derivations from mnemonic,base58,seed
+>CLI and Node.js library for  HD Wallet derivations from mnemonic,seed
 
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/miguelmota/ethereum-hdwallet/master/LICENSE)
 
@@ -10,16 +10,16 @@
 ### Install
 
 ```bash
-npm install ethereum-hdwallet -g
+npm install hd-address-cli -g
 ```
 
 ### Usage
-Creating a new HD wallet from a mnemonic:
+#### generate mnemonic:
 ```bash
     hd_address_cli mnemonic
 ```
- 
 
+#### helper
 ```bash
 $ hd_address_cli -h
  
@@ -38,7 +38,7 @@ Options:
   -r, --range     Account Index Range (e.g 1-100)    [string] [default: "1-100"]
   -m, --mnemonic  Mnemonic                                              [string]
   -s, --seed      Seed in hex format                                    [string]
-  -p, --hdpath    HD Path                                               [string]
+  -p, --path    HD Path                                               [string]
   -h, --help      Show help                                            [boolean]
 
 Examples:
@@ -46,9 +46,7 @@ Examples:
 
 copyright 2022
 
-```
-
-The default HD path is `m/44'/0'/0'/0/`.
+``` 
 
 ### Examples
 
