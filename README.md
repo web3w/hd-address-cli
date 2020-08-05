@@ -2,7 +2,7 @@
 
 
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/miguelmota/ethereum-hdwallet/master/LICENSE)   [![NPM version](https://img.shields.io/npm/v/hd-address-cli?style=flat-square)](https://www.npmjs.com/package/hd-address-cli)
- >CLI and Node.js library for  HD Wallet derivations from mnemonic,seed
+ >CLI and Node.js library for  HD Wallet derivations from mnemonic,seed,base58, suport BTC,LTC,BCH,ETH,TRX
 
 
 ## CLI
@@ -172,7 +172,7 @@ $ echo xprv9s21ZrQH143K4LNZvyv81JjVubcS891ij8CCEA4Bax159a4btLcz1qaHPRm2yr3bWawDX
 npm install hd-address-cli
 ```
 
-Creating a new HD wallet from a mnemonic:
+**1.Creating a new HD wallet from a mnemonic:** [example](https://github.com/gisvr/hd-address-example/blob/master/cli/create.wallet.js)
 
 ```js
 const HDWallet = require('hd-address-cli')
@@ -182,7 +182,7 @@ const hdwallet = HDWallet.fromMnemonic(mnemonic)
 console.log(`${hdwallet.derive(`m/44'/60'/0'/0/0`).getAddress().toString('hex')}`) // 0xc49926c4124cee1cba0ea94ea31a6c12318df947
 ```
 
-Creating a new HD wallet from a seed:
+**2.Creating a new HD wallet from a seed:**[example](https://github.com/gisvr/hd-address-example/blob/master/cli/create.wallet.js)
 
 ```js
 const seed = Buffer.from('efea201152e37883bdabf10b28fdac9c146f80d2e161a544a7079d2ecc4e65948a0d74e47e924f26bf35aaee72b24eb210386bcb1deda70ded202a2b7d1a8c2e', 'hex')
@@ -190,15 +190,14 @@ const ethSeedSWallet= HDWallet.fromSeed(seed,"ETH")
 console.log(ethSeedSWallet.derive(`m/0'/0/1`).getAddress()) // 0x8230645aC28A4EdD1b0B53E7Cd8019744E9dD559
 ```
 
-Creating a new HD wallet from at a base58:
+**3.Creating a new HD wallet from at a base58:**[example](https://github.com/gisvr/hd-address-example/blob/master/cli/create.wallet.js)
 
 ```js
 const {base58} =HDWallet.cli.generateBase58({})
 const ethBase58SWallet= HDWallet.fromBase58(base58,"ETH")
 console.log(ethBase58SWallet.derive(`m/0'/0/1`).getAddress())
 ```
-
-Deriving keys at a HD path:
+**4.Deriving keys at a HD path:**[example](https://github.com/gisvr/hd-address-example/blob/master/cli/getaddress.js)
 
 ```js
 //026005c86a6718f66221713a77073c41291cc3abbfcd03aa4955e9b2b50dbf7f9b // compression public key
@@ -207,10 +206,7 @@ console.log(hdwallet.derive(`m/0'/0/0`).getPublicKey())
 console.log(hdwallet.derive(`m/0'/0/0`).getPrivateKey()) 
 console.log(hdwallet.derive(`m/0'/0/0`).hdpath())
 ```
-
-
-
-Deriving wallets given account index:
+**5.Deriving wallets given account index:** [example](https://github.com/gisvr/hd-address-example/blob/master/cli/getaddress.js)
 
 ```js
 let hd = hdwallet.derive(`m/0'/0`)

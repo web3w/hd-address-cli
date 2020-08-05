@@ -1,6 +1,6 @@
 {
   "name": "hd-address-cli",
-  "version": "1.0.6",
+  "version": "2.0.1",
   "description": "HD Wallet CLI tools",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,10 @@
     "hd",
     "wallet",
     "hdwallet",
+    "hd-wallet",
+    "ethereum-hdwallet",
+    "btc-hdwallet",
+    "trx-hdwallet",
     "bip39",
     "mnemonic",
     "blockchain",
