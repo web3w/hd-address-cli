@@ -1,21 +1,23 @@
 #!/usr/bin/env node
 let cli = require("../lib/cli")
 let argv = require('yargs')
-    .usage('\n Usage: hd_address_cli [options]')
-    .example('hd_address_cli -c "BTC" -m "tag volcano eight thank tide" -l pri')
+    .usage('\nUsage: $0 <cmd> [args]')
+    .example('$0 -c "BTC" -m "tag volcano eight thank tide" -l pri')
     .epilog('copyright 2022')
     .alias({
+        v: 'version',
         c: 'coin',
         i: 'index',
         l: 'columns',
         r: 'range',
         m: 'mnemonic',
         s: 'seed',
+        b: 'base58',
         p: 'path',
         h: "help"
     }).default({
         c: "BTC",
-        r: "1-100"
+        r: "1-10"
     }).describe({
         c: "coin name (e.g. BTC,BCH,LTC,ETH,TRX,BTC_TEST,BCH_TEST,LTC_TEST)",
         i: "Account Index (e.g. 6)",
@@ -23,25 +25,47 @@ let argv = require('yargs')
         r: "Account Index Range (e.g 1-100)",
         m: "Mnemonic",
         s: "Seed in hex format",
+        b: 'base58 format',
         p: "HD Path",
-    }).string(["c", 'l', "r", "m", "s", "p"])
+    }).string(["c", 'l', "r", "m", "s", "p", "b"])
     .number(["i"])
     .demand(['c'])
-    .help('h')
-    .command("mnemonic", "Generate random mnemonic", function (yargs) {
-        let argv = yargs.reset()
-            .option("l", {
-                alias: "lang",
-                default: "EN",
-                description: "mnemonic lang"
-            })
-            .option("s", {
-                alias: "strength",
-                default: "low",
-                description: "mnemonic strength"
-            }).help("h")
-            .alias("h", "help")
-            .argv;
+    .command("mnemonic [strength,lang]", "Generate random mnemonic", function (yargs) {
+        // let argv = yargs.reset()
+        yargs.positional("lang", {
+            alias: "l",
+            default: "EN",
+            description: "mnemonic lang"
+        }).positional("strength", {
+            alias: "s",
+            default: "low",
+            description: "mnemonic strength"
+        }).argv;
+    }, (argv) => {
+        // if (argv.verbose) console.info(`start server on :${argv.port}`)
+        cli.generateMnemonic(argv)
+        // serve(argv.port)
+    })
+    .command("seed [strength]", "Generate random seed", function (yargs) {
+        yargs.positional('strength', {
+            alias: "s",
+            describe: 'seed strength',
+            default: "low"
+        }).argv;
+    }, (argv) => {
+        // if (argv.verbose) console.info(`start server on :${argv.port}`)
+        console.log(argv)
+        cli.generateSeed(argv)
+        // serve(argv.port)
+    })
+    .command("base58 [strength]", "Generate random base58", function (yargs) {
+        yargs.positional('strength', {
+            alias: "s",
+            describe: 'base58 strength',
+            default: "low"
+        }).argv;
+    }, (argv) => {
+        cli.generateBase58(argv)
     })
     .argv;
 
@@ -54,22 +78,25 @@ if (process.stdin) {
         content += buf.toString()
     })
     setTimeout(() => {
-        argv.mnemonic = (content || argv.mnemonic || '').trim()
+        if (!argv._.length) {
+            if (argv.base58) {
+                argv.base58 = (content || argv.base58 || '').trim()
+            }
 
-        if (argv.lang) {
-            cli.generateMnemonic(argv)
-        } else {
+            if (argv.mnemonic) {
+                argv.mnemonic = (content || argv.mnemonic || '').trim()
+            }
+
+            if (argv.seed) {
+                argv.seed = (content || argv.seed || '').trim()
+            }
+            console.log(argv)
             cli.generateAddress(argv)
         }
-
         process.exit(0)
+
     }, 10)
 } else {
-    if (argv.lang) {
-        cli.generateMnemonic(argv)
-    } else {
-        cli.generateAddress(argv)
-    }
+    console.warn("process.stdin null")
+    cli.generateAddress(argv)
 }
-
-// 03d0be996b63e90c7625dd3f5319c3bc11669d3d35ae5dc345595e5e59be74084f
