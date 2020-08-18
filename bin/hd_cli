@@ -1,0 +1,313 @@
+#!/usr/bin/env node
+
+let cli = require("../lib/cli")
+let argv = require("../lib/argv")
+let inquirer = require("inquirer");
+
+let mnemonicPrompt = language => {
+    let prompet = [{
+        type: 'input',
+        name: "secret",
+        message: "随机生成助记词",
+        default: function () {
+            return cli.generateMnemonic({lang: language})
+        },
+    }]
+    return inquirer.prompt(prompet)
+}
+
+// 验证 seed 长度
+function utf8Length(s) {
+    var l = 0;
+    for (var i = 0; i < s.length; i++) {
+        var c = s.charCodeAt(i);
+        if (c <= 0x007f) l += 1;
+        else if (c <= 0x07ff) l += 2;
+        else if (c >= 0xd800 && c <= 0xdfff) l += 2;  // surrogates
+        else l += 3;
+    }
+    return l;
+}
+
+let secretPrompt = () => {
+    let prompt = [{
+        type: "list",
+        name: "secretType",
+        message: "钱包根类型",
+        choices: [
+            {name: "生成助记词", value: "randomMnemo", checked: true},
+            {name: "生成种子", value: "randomSeed"},
+            {name: "生成Base58", value: "randomBase58"},
+            new inquirer.Separator("-------输入(input)-------"),
+            {name: "输入助记词", value: "mnemo"},
+            {name: "输入种子", value: "seed"},
+            {name: "输入Base58", value: "base58"},
+        ]
+    },
+        {
+            type: "list",
+            name: "language",
+            message: "注记词的语言",
+            choices: [
+                {name: "Chinese", value: "CN", checked: true},
+                {name: "English", value: "EN"},
+                {name: "Japanese", value: "JA"},
+            ],
+            when: function (answers) {
+                return answers.secretType == "randomMnemo"
+            },
+        },
+        {
+            type: "password",
+            name: "secret",
+            mask: '*',
+            message: "输入助记词",
+            when: function (answers) {
+                return answers.secretType == "mnemo"
+            },
+            validate: function (val) {
+                // // 验证是否是中文
+                // let pattern = new RegExp("[\u4E00-\u9FA5]+");
+
+                let wards = val.split(" ")
+                if (wards < 2) {
+                    return "助记词必须空格分割";
+                } else {
+                    return true
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: "secret",
+            message: "随机生成种子",
+            default: function () {
+                let {seed} = cli.generateSeed()
+                return seed.toString("hex")
+            },
+            when: function (answers) { // 当watch为true的时候才会提问当前问题
+                return answers.secretType == "randomSeed"
+            },
+        },
+        {
+            type: "password",
+            name: "secret",
+            message: "输入助种子",
+            mask: '*',
+            when: function (answers) {
+                return answers.secretType == "seed"
+            },
+            validate: function (val) {
+                if (utf8Length(val) > 127) {
+                    return true
+                } else {
+                    return "Seed should be at least 128 bits"
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: "secret",
+            message: "随机生成Base58",
+            default: function () {
+                let {base58} = cli.generateBase58()
+                return base58
+            },
+            when: function (answers) { // 当watch为true的时候才会提问当前问题
+                return answers.secretType == "randomBase58"
+            },
+        },
+        {
+            type: "password",
+            name: "secret",
+            mask: '*',
+            message: "输入Base58",
+            when: function (answers) { // 当watch为true的时候才会提问当前问题
+                return answers.secretType == "base58"
+            },
+            validate: function (val) {
+                if (utf8Length(val) > 127) {
+                    return true
+                } else {
+                    return "Base58 should be at least 128 bits"
+                }
+            }
+        },
+    ]
+    return inquirer.prompt(prompt)
+}
+
+let hdQuestion = (answers) => {
+    let prompt = [
+        {
+            type: "list",
+            name: "coin",
+            message: "选择需要生成的币种(HD coinType)",
+            choices: [
+                {name: "BTC", value: "BTC", checked: true},
+                {name: "BCH", value: "BCH"},
+                {name: "LTC", value: "LTC"},
+                new inquirer.Separator(),
+                {name: "ETH", value: "ETH"},
+                {name: "TRX", value: "TRX"},
+            ]
+        },
+        {
+            type: "list",
+            name: "account",
+            message: "选择账户",
+            choices: [
+                {name: "默认账户(0)", value: "0", checked: true},
+                {name: "对公账户(1)", value: "1"},
+                {name: "对私账户(2)", value: "2"},
+                {name: "其他(3)", value: "3"},
+            ]
+        },
+        {
+            type: "input",
+            name: "accountOther",
+            message: "输入账户",
+            when: function (answers) {
+                return answers.account == "3"
+            },
+            validate: function (val) {
+                let reg = new RegExp("^[0-9]*$");
+                if (reg.test(val)) { // 校验位数
+                    return true;
+                }
+                return "请输入数字";
+            }
+        },
+        {
+            type: "list",
+            name: "change",
+            message: "选择交易类型",
+            choices: [
+                {name: "对外收款(0)", value: "0", checked: true},
+                {name: "交易找零(1)", value: "1"},
+                {name: "归集地址(2)", value: "2"},
+                {name: "其他(3)", value: "3"},
+            ]
+        },
+        {
+            type: "input",
+            name: "changeOther",
+            message: "定义交易类型",
+            when: function (answers) {
+                return answers.change == "3"
+            },
+            validate: function (val) {
+                let reg = new RegExp("^[0-9]*$");
+                if (reg.test(val)) { // 校验位数
+                    return true;
+                }
+                return "请输入数字";
+            }
+        },
+        {
+            type: "input",
+            name: "indexRange",
+            message: "输入账户生成索引 (e.g 1-100 or 1)",
+            validate: function (val) {
+                let reg = new RegExp("^[0-9]*$");
+                if (reg.test(val)) { // 校验位数
+                    return true;
+                } else {
+                    let pass = val.match(/^([0-9]+)(-)([0-9]+)$/)
+                    if (pass && pass[1] < pass[3]) {
+                        return true
+                    }
+                }
+                return "请输入数字或者范围(e.g 1-100 or 1)";
+            }
+        },
+    ]
+    return inquirer.prompt(prompt).then(res => {
+        let account = res.account || res.accountOther
+        let change = res.change || res.changeOther
+        let path = "m/" + account + "'/" + change + "/"
+        let index, range
+        let parts = res.indexRange.split('-');
+        if (parts.length == 2) {
+            range = res.indexRange
+        } else {
+            index = res.indexRange
+        }
+        let mnemonic, seed, base58
+        let {secretType, secret} = answers
+        if (secretType == "randomMnemo" || secretType == "mnemo") {
+            mnemonic = secret
+        }
+
+        if (secretType == "randomBase58" || secretType == "base58") {
+            base58 = secret
+        }
+
+        if (secretType == "randomSeed" || secretType == "seed") {
+            seed = secret
+        }
+
+
+        let columns = "path,pri,pub"
+        let options = {coin: res.coin, mnemonic, seed, base58, index, range, path, columns}
+        console.log(options)
+
+        return cli.generateAddress(options)
+    })
+}
+
+
+let hdAnswers = (answers) => {
+    let isRandom = answers.secretType.substr(0, 6) == "random"
+    if (isRandom && answers.language == "CN") {
+        console.warn("注意备份", answers.secret)
+    }
+    hdQuestion(answers).then(res => {
+        console.log(res)
+    })
+}
+
+let args = process.argv.splice(2);
+if (args.length) {
+    if (process.stdin) {
+        process.stdin.setEncoding('utf8')
+        process.stdin.resume()
+        let content = ''
+        process.stdin.on('data', (buf) => {
+            content += buf.toString()
+        })
+        setTimeout(() => {
+            if (!argv._.length) {
+                // 默认mnemonic
+                argv.mnemonic = (content || argv.mnemonic || '').trim()
+
+                if (argv.base58 != undefined) {
+
+                    argv.base58 = (content || argv.base58 || '').trim()
+                    argv.mnemonic = ""
+                }
+
+                if (argv.seed != undefined) {
+                    argv.seed = (content || argv.seed || '').trim()
+                    argv.mnemonic = ""
+                }
+                // console.log(argv)
+                cli.generateAddress(argv)
+            }
+            process.exit(0)
+
+        }, 10)
+    }
+} else {
+    secretPrompt().then((answers) => {
+            if (answers.language) {
+                mnemonicPrompt(answers.language).then(res => {
+                    answers.secret = res.secret
+                    hdAnswers(answers)
+                })
+            } else {
+                hdAnswers(answers)
+            }
+        }
+    );
+}

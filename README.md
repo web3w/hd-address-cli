@@ -16,28 +16,28 @@
 ### Usage
 #### Generate mnemonic:
 ```bash
-   $ hd_address_cli mnemonic
-   $ hd_address_cli mnemonic -l CN -s mid15
-   $ hd_address_cli mnemonic -l JA -s mid18
-   $ hd_address_cli mnemonic -l EN -s high
+   $ hd_cli mnemonic
+   $ hd_cli mnemonic -l CN -s mid15
+   $ hd_cli mnemonic -l JA -s mid18
+   $ hd_cli mnemonic -l EN -s high
 ```
 
 #### Generate seed and base58:
 ```bash
-   $ hd_address_cli base58
-   $ hd_address_cli seed -s mid15 
+   $ hd_cli base58
+   $ hd_cli seed -s mid15 
 ```
 
 #### Helper
 ```bash
-$ hd_address_cli -h
+$ hd_cli -h
  
-Usage: hd_address_cli <cmd> [args]
+Usage: hd_cli <cmd> [args]
 
 Commands:
-  hd_address_cli mnemonic [strength,lang]  Generate random mnemonic
-  hd_address_cli seed [strength]           Generate random seed
-  hd_address_cli base58 [strength]         Generate random base58
+  hd_cli mnemonic [strength,lang]  Generate random mnemonic
+  hd_cli seed [strength]           Generate random seed
+  hd_cli base58 [strength]         Generate random base58
 
 Options:
   -c, --coin      coin name (e.g.
@@ -54,7 +54,7 @@ Options:
   -h, --help      Show help                                            [boolean]
 
 Examples:
-  hd_address_cli -c "BTC" -m "tag volcano eight thank tide" -l pri
+  hd_cli -c "BTC" -m "tag volcano eight thank tide" -l pri
 
 
 ``` 
@@ -64,7 +64,7 @@ Examples:
 Display the address at a particular account index:
 
 ```bash
-$ hd_address_cli -c BTC -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -i 4
+$ hd_cli -c BTC -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -i 4
     
     account address
     ┌─────────┬──────────────────────────────────────┬───────┬───────┐
@@ -77,7 +77,7 @@ $ hd_address_cli -c BTC -m "tag volcano eight thank tide danger coast health abo
 Display the account address derived from a range of account indexes:
 
 ```bash
-$ hd_address_cli -c "ETH" -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -r 5-10
+$ hd_cli -c "ETH" -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -r 5-10
 
     ┌─────────┬──────────────────────────────────────────────┬───────┬───────┐
     │ (index) │                   address                    │ coin  │ index │
@@ -94,7 +94,7 @@ $ hd_address_cli -c "ETH" -m "tag volcano eight thank tide danger coast health a
 Display the private keys of accounts:
 
 ```bash
-$ hd_address_cli -c "TRX" -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -r 5-10 -l pri
+$ hd_cli -c "TRX" -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -r 5-10 -l pri
 
     ┌─────────┬──────────────────────────────────────┬────────────────────────────────────────────────────────────────────┬───────┬───────┐
     │ (index) │               address                │                                pri                                 │ coin  │ index │
@@ -112,7 +112,7 @@ $ hd_address_cli -c "TRX" -m "tag volcano eight thank tide danger coast health a
 Display the HD path of the account:
 
 ```bash
-$ hd_address_cli -c ETH -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -i 3 -l path
+$ hd_cli -c ETH -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -i 3 -l path
 
     account hd path
     ┌─────────┬──────────────────────────────────────────────┬────────────────────┬───────┬───────┐
@@ -126,7 +126,7 @@ $ hd_address_cli -c ETH -m "tag volcano eight thank tide danger coast health abo
 Use a custom HD path:
 
 ```bash
-$ hd_address_cli -c ETH -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -p "m/20'/0/" -l path,pri -r 0-3
+$ hd_cli -c ETH -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -p "m/20'/0/" -l path,pri -r 0-3
 
     ┌─────────┬──────────────────────────────────────────────┬─────────────────────┬────────────────────────────────────────────────────────────────────┬───────┬───────┐
     │ (index) │                   address                    │        path         │                                pri                                 │ coin  │ index │
@@ -140,7 +140,7 @@ $ hd_address_cli -c ETH -m "tag volcano eight thank tide danger coast health abo
 Display multiple columns:
 
 ```bash
-$ hd_address_cli -c BTC -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -l "pri,path" -r 0-2
+$ hd_cli -c BTC -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -l "pri,path" -r 0-2
 
     ┌─────────┬──────────────────────────────────────┬───────────────────┬────────────────────────────────────────────────────────────────────┬───────┬───────┐
     │ (index) │               address                │       path        │                                pri                                 │ coin  │ index │
@@ -155,8 +155,8 @@ $ hd_address_cli -c BTC -m "tag volcano eight thank tide danger coast health abo
 Pipe mnemonic:
 
 ```bash
-$ echo "tag volcano eight thank tide danger coast health above argue embrace heavy"  | hd_address_cli -c BTC -i 0
-$ echo xprv9s21ZrQH143K4LNZvyv81JjVubcS891ij8CCEA4Bax159a4btLcz1qaHPRm2yr3bWawDX7B8gzAP6rVwY3BorBeWMYcsehtCzkMXA7nJB3g | hd_address_cli -b -c ETH
+$ echo "tag volcano eight thank tide danger coast health above argue embrace heavy"  | hd_cli -c BTC -i 1
+$ echo xprv9s21ZrQH143K4LNZvyv81JjVubcS891ij8CCEA4Bax159a4btLcz1qaHPRm2yr3bWawDX7B8gzAP6rVwY3BorBeWMYcsehtCzkMXA7nJB3g | hd_cli -b -c ETH
 
 
     ┌─────────┬──────────────────────────────────────┬───────┬───────┐
