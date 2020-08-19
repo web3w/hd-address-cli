@@ -195,16 +195,16 @@ $ echo xprv9s21ZrQH143K4LNZvyv81JjVubcS891ij8CCEA4Bax159a4btLcz1qaHPRm2yr3bWawDX
 ```
 
 ### Recommended Usage
->  Secret does not stay at History after clI is turned off (如下操作，密钥不会保存在操作历史中)
+>  Secret does not stay at history after cli is turned off (如下操作，密钥不会保存在操作历史中)
 ```shell script
-    //1.Write the secret to env
+    //1.Write the secret to env(将密钥写入环境变量)
     mnemo="tag volcano eight thank tide danger coast health above argue embrace heavy"
     echo $mnemo
-    //2.View the operation history and delete it
+    //2.View the operation history and delete it (查看操作历史删除包含密钥的历史记录)
     history 
     history -d {history id}
     history 
-    //3. User secret
+    //3. User secret (在 cli中使用变量)
     hd_cli -m mnemo
  
 ```
