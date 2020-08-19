@@ -58,7 +58,7 @@ describe("hd-address-cli index", () => {
     })
 
     it("cli generateAddress default", () => {
-        let option = {mnemonic: "aa", coin: "BTC",columns: "pri,path"}
+        let option = {mnemonic: "aa", coin: "BTC",columns: "pri,path",index:1}
         let foo = Wallet.cli.generateAddress(option)
         console.log(foo)
     })
@@ -71,19 +71,24 @@ describe("hd-address-cli index", () => {
 
 
     it("cli generateMnemonic", () => {
+        let foo = Wallet.cli.generateMnemonic()
+        console.log(foo)
+    })
+
+    it("cli generateMnemonic CN", () => {
         let foo = Wallet.cli.generateMnemonic({lang: "CN"})
         console.log(foo)
     })
 
 
     it("cli generateSeed", () => {
-        let foo = Wallet.cli.generateSeed({})
+        let foo = Wallet.cli.generateSeed()
         console.log(foo.seed.toString("hex"))
     })
 
 
     it("cli generateBase58", () => {
-        let foo = Wallet.cli.generateBase58({})
+        let foo = Wallet.cli.generateBase58()
         console.log(foo.base58.toString("hex"))
     })
 

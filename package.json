@@ -1,6 +1,6 @@
 {
   "name": "hd-address-cli",
-  "version": "2.0.1",
+  "version": "2.2.6",
   "description": "HD Wallet CLI tools",
   "main": "index.js",
   "scripts": {

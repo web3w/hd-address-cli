@@ -1,22 +1,88 @@
 # hd-address-cli
 
-
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/miguelmota/ethereum-hdwallet/master/LICENSE)   [![NPM version](https://img.shields.io/npm/v/hd-address-cli?style=flat-square)](https://www.npmjs.com/package/hd-address-cli)
- >CLI and Node.js library for  HD Wallet derivations from mnemonic,seed,base58, suport BTC,LTC,BCH,ETH,TRX
+ >Hd Wallet deterministic address generation and recovery tool(HD钱包地址生成，恢复工具)
 
 
-## CLI
-
-### Install
+## Install
 
 ```bash
     $ npm install hd-address-cli -g
+    OR
+    $ yarn global add hd-address-cli
 ```
-
-### Usage
- $ hd_cli
+##  Introduction
+[HD Wallet coin type list (bip44)]( https://github.com/satoshilabs/slips/blob/master/slip-0044.md)  
+m / purpose' / coin_type' / account' / change / address_index
+```js
+                                                        / address 0
+                coinType 0(btc) -- account 0 -- change 0  
+              /                                         \ address 1
+root -- BIP44 
+              \
+                coinType 60(eth) -- account 0 -- change 1 -- address 0
+                          
+```
+## API
+[API Use Case](./API.md)
+```js
+ const HDWallet = require('hd-address-cli')
+ // CIL methods
+  HDWallet.cli.generateMnemonic({lang: "CN"}) //随机生成中文助记词
+  HDWallet.cli.generateSeed()  //随机生成种子
+  HDWallet.cli.generateBase58() //随机生成base58秘钥
+  HDWallet.cli.generateAddress(option) //批量产生地址 eg. {mnemonic: "aa", coin: "BTC",columns: "pri,path",index:1}
+ // create HD Wallet methods
+  HDWallet.fromMnemonic(mnemonic) // 根据助记词创建默认的BTC钱包
+  HDWallet.fromSeed(seed,"TRX") // 根据seed 创建 TRX钱包
+  let hdWallet =HDWallet.fromBase58(base58,"ETH") // 根据Base58创建ETH钱包
+ // HD Wallet methods
+  hdWallet.derive(`m/0'/0/1`).getAddress()
+  hdWallet.derive(`m/0'/0/1`).getPublicKey()
+  hdWallet.derive(`m/0'/0/1`).getPrivateKey()
+  hdWallet.derive(`m/0'/0/1`).hdpath()
+  hdWallet.derive(`m/0'/0/1`).getAll()
+```
+## CLI
+### Interactive CLI
+ > $ hd_cli
 ![image](https://user-images.githubusercontent.com/23111262/90519313-72798080-e19a-11ea-93b7-203745879841.png)
-#### Generate mnemonic:
+
+
+### Helper
+```bash
+$ hd_cli -h
+ 
+Usage: hd_cli <cmd> [args]
+
+Commands: //子命令: 用来生成根密钥
+  hd_cli mnemonic [strength,lang]  Generate random mnemonic //随机生成助记词: 可选参数强度和语言。[low,mid15,mid18,high]
+  hd_cli seed [strength]           Generate random seed //随机生成种子，
+  hd_cli base58 [strength]         Generate random base58 //随机生成base58密钥
+
+Options:
+  -c, --coin      coin name (e.g.
+                  BTC,BCH,LTC,ETH,TRX,BTC_TEST,BCH_TEST,LTC_TEST)
+                                            [string] [required] [default: "BTC"] //指定生成coin的地址，默认BTC
+  -i, --index     Account Index (e.g. 6)                                [number] //HD wallet 规范中账户index
+  -l, --columns   Columns to display (e.g. pub,pri,path)                [string] //控制显示的表的列
+  -r, --range     Account Index Range (e.g 1-100)     [string] [default: "1-10"] //按照index 范围生成地址。和index只能选择一个
+  -m, --mnemonic  Mnemonic                                              [string] //传入的助记词，和seed和base58只能选择一个
+  -s, --seed      Seed in hex format                                    [string] //传入 种子
+  -b, --base58    Base58 format                                         [string] //传入 base58
+  -p, --path      You can specify account and change path (e.g. 'm/20'/0/')    
+                                           [string]  [default: 'm/1'/0/']//可以指定 account和change部分
+  -v, --version   Show version number                                  [boolean]
+  -h, --help      Show help                                            [boolean]
+
+Examples:
+  hd_cli -c "BTC" -m "tag volcano eight thank tide" -l pri
+
+``` 
+
+### Use Case
+
+1. Generate mnemonic:(随机生成多种语言，不同强度的助记词)
 ```bash
    $ hd_cli mnemonic
    $ hd_cli mnemonic -l CN -s mid15
@@ -24,51 +90,16 @@
    $ hd_cli mnemonic -l EN -s high
 ```
 
-#### Generate seed and base58:
+2. Generate seed and base58:(随机生成seed和base58)
 ```bash
    $ hd_cli base58
    $ hd_cli seed -s mid15 
 ```
 
-#### Helper
-```bash
-$ hd_cli -h
- 
-Usage: hd_cli <cmd> [args]
-
-Commands:
-  hd_cli mnemonic [strength,lang]  Generate random mnemonic
-  hd_cli seed [strength]           Generate random seed
-  hd_cli base58 [strength]         Generate random base58
-
-Options:
-  -c, --coin      coin name (e.g.
-                  BTC,BCH,LTC,ETH,TRX,BTC_TEST,BCH_TEST,LTC_TEST)
-                                            [string] [required] [default: "BTC"]
-  -i, --index     Account Index (e.g. 6)                                [number]
-  -l, --columns   Columns to display (e.g. pub,pri,path)                [string]
-  -r, --range     Account Index Range (e.g 1-100)     [string] [default: "1-10"]
-  -m, --mnemonic  Mnemonic                                              [string]
-  -s, --seed      Seed in hex format                                    [string]
-  -b, --base58    Base58 format                                         [string]
-  -p, --path      HD Path                                               [string]
-  -v, --version   Show version number                                  [boolean]
-  -h, --help      Show help                                            [boolean]
-
-Examples:
-  hd_cli -c "BTC" -m "tag volcano eight thank tide" -l pri
-
-
-``` 
-
-### Examples
-
-Display the address at a particular account index:
+3. Display the address at a particular account index:（显示指定的index的地址)
 
 ```bash
-$ hd_cli -c BTC -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -i 4
-    
-    account address
+$ hd_cli -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -i 4
     ┌─────────┬──────────────────────────────────────┬───────┬───────┐
     │ (index) │               address                │ coin  │ index │
     ├─────────┼──────────────────────────────────────┼───────┼───────┤
@@ -76,11 +107,10 @@ $ hd_cli -c BTC -m "tag volcano eight thank tide danger coast health above argue
     └─────────┴──────────────────────────────────────┴───────┴───────┘
 ```
 
-Display the account address derived from a range of account indexes:
+4. Display the account address derived from a range of ETH account indexes:（显示ETH帐户索引派生的帐户地址)
 
 ```bash
 $ hd_cli -c "ETH" -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -r 5-10
-
     ┌─────────┬──────────────────────────────────────────────┬───────┬───────┐
     │ (index) │                   address                    │ coin  │ index │
     ├─────────┼──────────────────────────────────────────────┼───────┼───────┤
@@ -93,11 +123,10 @@ $ hd_cli -c "ETH" -m "tag volcano eight thank tide danger coast health above arg
     └─────────┴──────────────────────────────────────────────┴───────┴───────┘
 ```
 
-Display the private keys of accounts:
+5. Display the private keys of Trx accounts:（显示Trx帐户的私钥)
 
 ```bash
 $ hd_cli -c "TRX" -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -r 5-10 -l pri
-
     ┌─────────┬──────────────────────────────────────┬────────────────────────────────────────────────────────────────────┬───────┬───────┐
     │ (index) │               address                │                                pri                                 │ coin  │ index │
     ├─────────┼──────────────────────────────────────┼────────────────────────────────────────────────────────────────────┼───────┼───────┤
@@ -111,12 +140,10 @@ $ hd_cli -c "TRX" -m "tag volcano eight thank tide danger coast health above arg
 
 ```
 
-Display the HD path of the account:
+6. Display the HD path of the account:(显示地址对应的HD路径)
 
 ```bash
 $ hd_cli -c ETH -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -i 3 -l path
-
-    account hd path
     ┌─────────┬──────────────────────────────────────────────┬────────────────────┬───────┬───────┐
     │ (index) │                   address                    │        path        │ coin  │ index │
     ├─────────┼──────────────────────────────────────────────┼────────────────────┼───────┼───────┤
@@ -125,11 +152,10 @@ $ hd_cli -c ETH -m "tag volcano eight thank tide danger coast health above argue
 
 ```
 
-Use a custom HD path:
+7. Use a custom HD path:(用户自定义HD path)
 
 ```bash
 $ hd_cli -c ETH -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -p "m/20'/0/" -l path,pri -r 0-3
-
     ┌─────────┬──────────────────────────────────────────────┬─────────────────────┬────────────────────────────────────────────────────────────────────┬───────┬───────┐
     │ (index) │                   address                    │        path         │                                pri                                 │ coin  │ index │
     ├─────────┼──────────────────────────────────────────────┼─────────────────────┼────────────────────────────────────────────────────────────────────┼───────┼───────┤
@@ -138,11 +164,11 @@ $ hd_cli -c ETH -m "tag volcano eight thank tide danger coast health above argue
     │    2    │ '0x62b6ffac78674392e0c30eC042636E22907FbCD2' │ "m/44'/60'/20'/0/2" │ '8fc1b1839cd9e5901f534bf22a385c9b78907aa3e417399e140e10f9c0231b38' │ 'ETH' │   2   │
     │    3    │ '0xce8bf9293cF5C4e9EcB50Aa8F9E42adF568ae356' │ "m/44'/60'/20'/0/3" │ '93b1302f88019cfd120f83677274447ae76112be7e31b6aee59928fbb9a12584' │ 'ETH' │   3   │
     └─────────┴──────────────────────────────────────────────┴─────────────────────┴────────────────────────────────────────────────────────────────────┴───────┴───────┘
-
-Display multiple columns:
+```
+8. Display multiple columns:(显示多列内容)
 
 ```bash
-$ hd_cli -c BTC -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -l "pri,path" -r 0-2
+$ hd_cli -m "tag volcano eight thank tide danger coast health above argue embrace heavy" -l "pri,path" -r 0-2
 
     ┌─────────┬──────────────────────────────────────┬───────────────────┬────────────────────────────────────────────────────────────────────┬───────┬───────┐
     │ (index) │               address                │       path        │                                pri                                 │ coin  │ index │
@@ -154,12 +180,11 @@ $ hd_cli -c BTC -m "tag volcano eight thank tide danger coast health above argue
 
 ```
 
-Pipe mnemonic:
+9. Pipe mnemonic or base58:(管道的方式导入助记词或base58)
 
 ```bash
 $ echo "tag volcano eight thank tide danger coast health above argue embrace heavy"  | hd_cli -c BTC -i 1
 $ echo xprv9s21ZrQH143K4LNZvyv81JjVubcS891ij8CCEA4Bax159a4btLcz1qaHPRm2yr3bWawDX7B8gzAP6rVwY3BorBeWMYcsehtCzkMXA7nJB3g | hd_cli -b -c ETH
-
 
     ┌─────────┬──────────────────────────────────────┬───────┬───────┐
     │ (index) │               address                │ coin  │ index │
@@ -167,60 +192,6 @@ $ echo xprv9s21ZrQH143K4LNZvyv81JjVubcS891ij8CCEA4Bax159a4btLcz1qaHPRm2yr3bWawDX
     │    0    │ '1LKrREbJ6RVckGMFVCxsXSLWrrvG8U7owQ' │ 'BTC' │   0   │
     └─────────┴──────────────────────────────────────┴───────┴───────┘
 
-```
-
-## Require
-```bash
-npm install hd-address-cli
-```
-
-**1.Creating a new HD wallet from a mnemonic:** [example](https://github.com/gisvr/hd-address-example/blob/master/cli/create.wallet.js)
-
-```js
-const HDWallet = require('hd-address-cli')
-
-const mnemonic = 'tag volcano eight thank tide danger coast health above argue embrace heavy'
-const hdwallet = HDWallet.fromMnemonic(mnemonic)
-console.log(`${hdwallet.derive(`m/44'/60'/0'/0/0`).getAddress().toString('hex')}`) // 0xc49926c4124cee1cba0ea94ea31a6c12318df947
-```
-
-**2.Creating a new HD wallet from a seed:**[example](https://github.com/gisvr/hd-address-example/blob/master/cli/create.wallet.js)
-
-```js
-const seed = Buffer.from('efea201152e37883bdabf10b28fdac9c146f80d2e161a544a7079d2ecc4e65948a0d74e47e924f26bf35aaee72b24eb210386bcb1deda70ded202a2b7d1a8c2e', 'hex')
-const ethSeedSWallet= HDWallet.fromSeed(seed,"ETH")
-console.log(ethSeedSWallet.derive(`m/0'/0/1`).getAddress()) // 0x8230645aC28A4EdD1b0B53E7Cd8019744E9dD559
-```
-
-**3.Creating a new HD wallet from at a base58:**[example](https://github.com/gisvr/hd-address-example/blob/master/cli/create.wallet.js)
-
-```js
-const {base58} =HDWallet.cli.generateBase58({})
-const ethBase58SWallet= HDWallet.fromBase58(base58,"ETH")
-console.log(ethBase58SWallet.derive(`m/0'/0/1`).getAddress())
-```
-**4.Deriving keys at a HD path:**[example](https://github.com/gisvr/hd-address-example/blob/master/cli/getaddress.js)
-
-```js
-//026005c86a6718f66221713a77073c41291cc3abbfcd03aa4955e9b2b50dbf7f9b // compression public key
-console.log(hdwallet.derive(`m/0'/0/0`).getPublicKey())
-//63e21d10fd50155dbba0e7d3f7431a400b84b4c2ac1ee38872f82448fe3ecfb9
-console.log(hdwallet.derive(`m/0'/0/0`).getPrivateKey()) 
-console.log(hdwallet.derive(`m/0'/0/0`).hdpath())
-```
-**5.Deriving wallets given account index:** [example](https://github.com/gisvr/hd-address-example/blob/master/cli/getaddress.js)
-
-```js
-let hd = hdwallet.derive(`m/0'/0`)
-console.log(hd.derive(1).getAddress()) // 0x8230645aC28A4EdD1b0B53E7Cd8019744E9dD559
-console.log(hd.derive(2).getAddress()) // 0x65c150B7eF3B1adbB9cB2b8041C892b15eDde05A
-console.log(hd.derive(2).hdpath())
-```
-
-## Test
-
-```bash
-npm test
 ```
 
 ## License
