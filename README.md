@@ -37,10 +37,10 @@ root -- BIP44
   HDWallet.fromSeed(seed,"TRX") // 根据seed 创建 TRX钱包
   let hdWallet =HDWallet.fromBase58(base58,"ETH") // 根据Base58创建ETH钱包
  // HD Wallet methods
-  hdWallet.derive(`m/0'/0/1`).getAddress()
-  hdWallet.derive(`m/0'/0/1`).getPublicKey()
-  hdWallet.derive(`m/0'/0/1`).getPrivateKey()
-  hdWallet.derive(`m/0'/0/1`).hdpath()
+  hdWallet.derive(`m/0'/0/1`).getAddress()  //根据hdpath生成对应coin的地址
+  hdWallet.derive(`m/0'/0/1`).getPublicKey() //根据hdpath生成对应coin的公钥
+  hdWallet.derive(`m/0'/0/1`).getPrivateKey() //根据hdpath生成对应coin的私钥
+  hdWallet.derive(`m/0'/0/1`).hdpath() // 获取完整hd path
   hdWallet.derive(`m/0'/0/1`).getAll()
 ```
 ## CLI
