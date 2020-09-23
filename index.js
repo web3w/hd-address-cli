@@ -42,7 +42,7 @@ class Wallet {
 const HDWallet = {
     cli,
     fromMnemonic: (mnemonic, coin, pwd) => {
-        let wallet = hdAddress.HD(mnemonic, pwd)
+        let wallet = hdAddress.HD(mnemonic, hdAddress.keyType.mnemonic,pwd)
         return new Wallet(wallet[coin])
     },
     fromSeed: (seed, coin, pwd) => {

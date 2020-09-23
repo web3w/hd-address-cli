@@ -92,7 +92,6 @@ describe("hd-address-cli index", () => {
         console.log(foo.base58.toString("hex"))
     })
 
-
 })
 
 

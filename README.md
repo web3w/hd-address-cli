@@ -5,22 +5,20 @@
 
 Please contact us if you have any special needs(如有定制需求请联系) txdev6@gmail.com
 ## Install
-
 ```bash
     $ npm install hd-address-cli -g
-    OR
     $ yarn global add hd-address-cli
 ```
 ##  Introduction
 [HD Wallet coin type list (bip44)]( https://github.com/satoshilabs/slips/blob/master/slip-0044.md)  
 m / purpose' / coin_type' / account' / change / address_index
 ```js
-                                                        / address 0
+                                                        / -- index 0 -> address
                 coinType 0(btc) -- account 0 -- change 0  
-              /                                         \ address 1
+              /                                         \ -- index 1 -> address
 root -- BIP44 
               \
-                coinType 60(eth) -- account 0 -- change 1 -- address 0
+                coinType 60(eth) -- account 0 -- change 1 -- index 0 -> address
                           
 ```
 ## API
@@ -47,7 +45,6 @@ root -- BIP44
 ### Interactive CLI
  > $ hd_cli
 ![image](https://user-images.githubusercontent.com/23111262/90519313-72798080-e19a-11ea-93b7-203745879841.png)
-
 
 ### Helper
 ```bash
@@ -205,7 +202,7 @@ $ echo xprv9s21ZrQH143K4LNZvyv81JjVubcS891ij8CCEA4Bax159a4btLcz1qaHPRm2yr3bWawDX
     history -d {history id}
     history 
     //3. User secret (在 cli中使用变量)
-    hd_cli -m mnemo
+    echo $mnemo | hd_cli -m 
  
 ```
 

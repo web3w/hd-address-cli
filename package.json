@@ -37,12 +37,12 @@
     "url": "https://github.com/gisvr/hd-address-cli/issues"
   },
   "bin": {
-    "hd_address_cli": "./bin/hd_cli",
-    "hd_cli": "./bin/hd_cli"
+    "hd_cli": "./bin/hd_cli",
+    "hd-cli": "./bin/hd_cli"
   },
   "homepage": "https://github.com/gisvr/hd-address-cli#readme",
   "dependencies": {
-    "hd-address": "^3.2.6",
+    "hd-address": "^3.2.7",
     "inquirer": "^7.3.3",
     "yargs": "^15.4.1"
   },
