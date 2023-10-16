@@ -1,8 +1,5 @@
-#!/usr/bin/env node 
-
-// let argv = require("../lib/argv")
-// let {secretPrompt, mnemonicPrompt, hdPrompt,cli} = require("../lib/propmt") 
-import   argv from "../lib/argv.js";
+#!/usr/bin/env node
+import argv from "../lib/argv.js";
 import { secretPrompt, mnemonicPrompt, hdPrompt, generateAddress } from "../lib/propmt.js";
 
 let args = process.argv.splice(2);
