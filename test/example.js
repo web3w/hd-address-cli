@@ -1,18 +1,16 @@
-import hdAddress from 'hd-address'; 
-debugger
-// import * as wallet from "../index.js"
-debugger
+import wallet from "../index.js"
 const mnemonic = 'tag volcano eight thank tide danger coast health above argue embrace heavy'
 debugger
-// const hdwallet = wallet.fromMnemonic(mnemonic,"ETH")
-// console.log(hdwallet.derive(`m/0'/0/0`).getAddress()) // 0xC49926C4124cEe1cbA0Ea94Ea31a6c12318df947
+const hdwallet = wallet.fromMnemonic(mnemonic,"ETH")
+debugger
+console.log(hdwallet.derive(`m/0'/0/0`).getAddress()) // 0xC49926C4124cEe1cbA0Ea94Ea31a6c12318df947
 
 
 
-// //026005c86a6718f66221713a77073c41291cc3abbfcd03aa4955e9b2b50dbf7f9b // compression public key
-// console.log(hdwallet.derive(`m/0'/0/0`).getPublicKey())
-// console.log(hdwallet.derive(`m/0'/0/0`).getPrivateKey()) //63e21d10fd50155dbba0e7d3f7431a400b84b4c2ac1ee38872f82448fe3ecfb9
-// console.log(hdwallet.derive(`m/0'/0/0`).hdpath())
+//026005c86a6718f66221713a77073c41291cc3abbfcd03aa4955e9b2b50dbf7f9b // compression public key
+console.log(hdwallet.derive(`m/0'/0/0`).getPublicKey())
+console.log(hdwallet.derive(`m/0'/0/0`).getPrivateKey()) //63e21d10fd50155dbba0e7d3f7431a400b84b4c2ac1ee38872f82448fe3ecfb9
+console.log(hdwallet.derive(`m/0'/0/0`).hdpath())
 
 // let hd = hdwallet.derive(`m/0'/0`)
 // console.log(hd.derive(1).getAddress()) // 0x8230645aC28A4EdD1b0B53E7Cd8019744E9dD559

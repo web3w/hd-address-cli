@@ -1,7 +1,6 @@
 import hdAddress from 'hd-address'; 
-debugger
 import * as cli from "./lib/cli.js";
-
+const keyType = hdAddress.keyType
 class Wallet {
     constructor(hd, hdpath = '') {
         this.__hdwallet = hd

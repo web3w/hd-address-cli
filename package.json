@@ -42,10 +42,10 @@
   },
   "type": "module",
   "homepage": "https://github.com/gisvr/hd-address-cli#readme",
-  "dependencies": {
+  "dependencies": { 
     "hd-address": "^3.3.0",
-    "inquirer": "^7.3.3",
-    "yargs": "^15.4.1"
+    "inquirer": "^9.2.11",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "mocha": "^8.1.1"

@@ -1,9 +1,9 @@
-let hdAddress = require('hd-address');
-let Wallet = require('../index')
+import hdAddress from 'hd-address';
+import { fromMnemonic } from '../index';
 
 describe("hd-address-cli recover", () => {
     it("fromMnemonic", () => {
-        let wallet = Wallet.fromMnemonic("puppy employ science describe smart youth ivory danger title museum skate crawl", "TRX")
+        let wallet = fromMnemonic("puppy employ science describe smart youth ivory danger title museum skate crawl", "TRX")
         let ehtWallet00 = wallet.derive("m/0/0/0")
         let foo00 = ehtWallet00.getAll()
         console.log(foo00)
