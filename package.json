@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/gisvr/hd-address-cli#readme",
   "dependencies": {
-    "hd-address": "^3.2.7",
+    "hd-address": "^3.2.8",
     "inquirer": "^7.3.3",
     "yargs": "^15.4.1"
   },
