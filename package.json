@@ -40,9 +40,10 @@
     "hd_cli": "./bin/hd_cli",
     "hd-cli": "./bin/hd_cli"
   },
+  "type": "module",
   "homepage": "https://github.com/gisvr/hd-address-cli#readme",
   "dependencies": {
-    "hd-address": "^3.2.8",
+    "hd-address": "^3.3.0",
     "inquirer": "^7.3.3",
     "yargs": "^15.4.1"
   },

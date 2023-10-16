@@ -1,6 +1,6 @@
-let hdAddress = require('hd-address');
-
-let cli = require("./lib/cli");
+import hdAddress from 'hd-address'; 
+debugger
+import * as cli from "./lib/cli.js";
 
 class Wallet {
     constructor(hd, hdpath = '') {
@@ -39,21 +39,19 @@ class Wallet {
     }
 }
 
-const HDWallet = {
+export default {
     cli,
     fromMnemonic: (mnemonic, coin, pwd) => {
-        let wallet = hdAddress.HD(mnemonic, hdAddress.keyType.mnemonic,pwd)
+        let wallet = hdAddress.HD(mnemonic, keyType.mnemonic, pwd)
         return new Wallet(wallet[coin])
     },
     fromSeed: (seed, coin, pwd) => {
         let seedBuf = Buffer.from(seed, "hex")
-        let wallet = hdAddress.HD(seedBuf, hdAddress.keyType.seed, pwd)
+        let wallet = hdAddress.HD(seedBuf, keyType.seed, pwd)
         return new Wallet(wallet[coin])
     },
     fromBase58: (base58, coin, pwd) => {
-        let wallet = hdAddress.HD(base58, hdAddress.keyType.base58, pwd)
+        let wallet = hdAddress.HD(base58, keyType.base58, pwd)
         return new Wallet(wallet[coin])
     }
 }
-
-module.exports = HDWallet

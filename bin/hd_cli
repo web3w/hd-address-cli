@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-let argv = require("../lib/argv")
-let {secretPrompt, mnemonicPrompt, hdPrompt,cli} = require("../lib/propmt")
+import argv, { _, mnemonic, base58, seed } from "../lib/argv";
+import { secretPrompt, mnemonicPrompt, hdPrompt, cli } from "../lib/propmt";
 
 
 let args = process.argv.splice(2);
@@ -14,19 +14,19 @@ if (args.length) {
             content += buf.toString()
         })
         setTimeout(() => {
-            if (!argv._.length) {
+            if (!_.length) {
                 // 默认mnemonic
-                argv.mnemonic = (content || argv.mnemonic || '').trim()
+                mnemonic = (content || mnemonic || '').trim()
 
-                if (argv.base58 != undefined) {
+                if (base58 != undefined) {
 
-                    argv.base58 = (content || argv.base58 || '').trim()
-                    argv.mnemonic = ""
+                    base58 = (content || base58 || '').trim()
+                    mnemonic = ""
                 }
 
-                if (argv.seed != undefined) {
-                    argv.seed = (content || argv.seed || '').trim()
-                    argv.mnemonic = ""
+                if (seed != undefined) {
+                    seed = (content || seed || '').trim()
+                    mnemonic = ""
                 }
                 // console.log(argv)
                 cli.generateAddress(argv)

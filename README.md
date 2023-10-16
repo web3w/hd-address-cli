@@ -46,6 +46,7 @@ root -- BIP44
  > $ hd_cli
 ![image](https://user-images.githubusercontent.com/23111262/90519313-72798080-e19a-11ea-93b7-203745879841.png)
 
+rice range hybrid gather civil broccoli innocent pipe pottery worry hub crisp
 ### Helper
 ```bash
 $ hd_cli -h
