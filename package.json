@@ -1,6 +1,6 @@
 {
   "name": "hd-address-cli",
-  "version": "2.2.8",
+  "version": "2.3.1",
   "description": "HD Wallet CLI tools",
   "main": "index.js",
   "scripts": {
@@ -37,13 +37,13 @@
     "url": "https://github.com/gisvr/hd-address-cli/issues"
   },
   "bin": {
-    "hd_cli": "./bin/hd_cli",
-    "hd-cli": "./bin/hd_cli"
+    "hd_cli": "./bin/hd_cli.js",
+    "hd-cli": "./bin/hd_cli.js"
   },
   "type": "module",
   "homepage": "https://github.com/gisvr/hd-address-cli#readme",
   "dependencies": { 
-    "hd-address": "^3.3.0",
+    "hd-address": "^3.3.1",
     "inquirer": "^9.2.11",
     "yargs": "^17.7.2"
   },
