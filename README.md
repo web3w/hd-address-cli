@@ -2,8 +2,7 @@
 
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/miguelmota/ethereum-hdwallet/master/LICENSE)   [![NPM version](https://img.shields.io/npm/v/hd-address-cli?style=flat-square)](https://www.npmjs.com/package/hd-address-cli)
  >Hd Wallet deterministic address generation and recovery tool(HD钱包地址生成，恢复工具)
-
-Please contact us if you have any special needs(如有定制需求请联系) txdev6@gmail.com
+ 
 ## Install
 ```bash
     $ npm install hd-address-cli -g
